@@ -1,6 +1,7 @@
 import * as dotenv from 'dotenv';
 import {Client, GatewayIntentBits, Partials} from 'discord.js';
 dotenv.config();
+const ignoreUserIds = ['344837487526412300'];
 
 const client = new Client({ intents: [
   GatewayIntentBits.Guilds,
@@ -17,6 +18,7 @@ client.on('ready', () => {
 client.ws.on("MESSAGE_REACTION_ADD", async (data) => {
   const emj = data.emoji;
   if(!data.burst || !data.guild_id || !data.channel_id || !data.member || !data.message_id || !emj) return;
+  if(ignoreUserIds.includes(data.user_id)) return;
   const guild = await client.guilds.fetch(data.guild_id);
   const channel = await guild.channels.fetch(data.channel_id);
   if(!channel?.isTextBased()) return;
